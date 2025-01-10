@@ -1,4 +1,5 @@
 import { dataProvider, dp } from "../../dataProvider.js";
+import GraphicsHelper from "../helper/GraphicsHelper.js";
 import { UIKitSlider } from "../ui/UIKitSlider.js";
 import { UIKitToggleButton } from "../ui/UIKitToggleButton.js";
 
@@ -284,6 +285,14 @@ class Utils {
             targetObject[keyString] = data.value;
         });
         return button;
+    }
+
+
+
+    static addFullScreenRect(line = false, fill = {color:0xFFFFFF}, alignCenter = false){
+        const x = alignCenter ? 0 - dp.stageRect.halfWidth : 0;
+        const y = alignCenter ? 0 - dp.stageRect.halfHeight : 0;
+        return GraphicsHelper.exDrawRect(x, y, dp.stageRect.width, dp.stageRect.height, line, fill);
     }
 
     /** ============================================================

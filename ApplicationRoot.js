@@ -15,7 +15,7 @@ export class ApplicationRoot extends PIXI.Container {
     }
     
     init(){
-        const frame = this.addChild(GraphicsHelper.exDrawRect(0, 0, dp.stageRect.width, dp.stageRect.height, {color:0xFF00FF, width:2}, {color:0xEFEFEF}));
+        const frame = this.addChild(GraphicsHelper.exDrawRect(0, 0, dp.stageRect.width, dp.stageRect.height, {color:0xFF00FF, width:2}, {color:0x545550}));
     
         if(this.checkParam()){
           const playerView = this.addChild(new PlayerView());
