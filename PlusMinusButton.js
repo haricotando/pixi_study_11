@@ -4,13 +4,13 @@ import Utils from "./class/util/Utils.js";
 
 export class PlusMinusButton extends PIXI.Container {
     
-    constructor(label) {
+    constructor(label, color = 0x000000) {
         super();
 
         this.button = this.addChild(new PIXI.Container());
         
         this.background = GraphicsHelper.exDrawRoundedRect(0, 0, 150, 150, 30, false, {color:0xFFFFFF});
-        this.background.alpha = 0.5;
+        this.background.alpha = 0
         Utils.pivotCenter(this.background);
         this.button.addChild(this.background);
 
@@ -18,20 +18,19 @@ export class PlusMinusButton extends PIXI.Container {
         this.eventMode = 'static';
 
         this.labelText = this.button.addChild(new PIXI.Text(label, {
-            fontFamily        : 'Noto Sans JP',
-            fontWeight        : 800,
+            fontFamily        : 'Inter',
+            fontWeight        : 100,
             fontSize          : 150,
-            fill              : 0xEFEFEF,
-            // fontStyle         : 'italic',
-            dropShadow        : true,
-            dropShadowColor   : '#000000',
-            dropShadowAlpha   : 0.9,
-            dropShadowBlur    : 16,
-            dropShadowAngle   : 0,
-            dropShadowDistance: 0,
+            fill              : color,
             
         }));
         this.labelText.anchor.set(0.5, 0.5);
+    }
+
+    onTapBehavior(){
+        gsap.timeline()
+            .set(this.scale, {x:3, y:3})
+            .to(this.scale, {x:1, y:1, duration:0.5, ease:'elastic.out(0.5)'});
     }
 
     activate(){

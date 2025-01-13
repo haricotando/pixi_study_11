@@ -365,7 +365,10 @@ class Utils {
             height: target.height,
             scale : target.scale,
         };
-        
+    }
+
+    static suicide(target){
+        target.parent.removeChild(target);
     }
 
 

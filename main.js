@@ -18,7 +18,7 @@ const basePCView = {width: 980, height: 1668};
 ------------------------------------------------------------ */
 WebFont.load({
     google: {
-        families: ['Noto Sans JP:800'],
+        families: ['Noto Sans JP:800', 'Inter:100,300,500,700'],
     },
     
     active: () => {

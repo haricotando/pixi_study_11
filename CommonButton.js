@@ -4,43 +4,60 @@ import Utils from "./class/util/Utils.js";
 
 export class CommonButton extends PIXI.Container {
     
-    constructor(label) {
+    constructor(label, color = 0x000000) {
         super();
 
         this.button = this.addChild(new PIXI.Container());
         
         this.background = GraphicsHelper.exDrawRoundedRect(0, 0, dp.stageRect.width - 400, 150, 30, false, {color:0xFFFFFF});
-        this.background.alpha = 0.2;
+        this.background.alpha = 0;
         Utils.pivotCenter(this.background);
         this.button.addChild(this.background);
-        this.backgroundRim = GraphicsHelper.exDrawRoundedRect(0, 0, dp.stageRect.width - 400, 150, 30, {color:0xFFFFFF, width:4}, false);
-        this.backgroundRim.alpha = 0.5;
-        Utils.pivotCenter(this.backgroundRim);
-        this.button.addChild(this.backgroundRim);
 
         this.labelText = this.button.addChild(new PIXI.Text(label, {
-            fontFamily        : 'Noto Sans JP',
-            fontWeight        : 800,
-            fontSize          : 80,
-            fill              : 0x545550,
-            fontStyle         : 'italic',
-            // dropShadow        : true,
-            // dropShadowColor   : '#000000',
-            // dropShadowAlpha   : 0.9,
-            // dropShadowBlur    : 16,
-            // dropShadowAngle   : 0,
-            // dropShadowDistance: 0,
-            
+            fontFamily   : 'Inter',
+            fontWeight   : 300,
+            fontSize     : 80,
+            fill         : color,
+            letterSpacing: 10,
         }));
         this.labelText.anchor.set(0.5, 0.5);
+
+        this.underline = this.button.addChild(GraphicsHelper.exDrawRect(0, 0, this.labelText.width, 4, false, {color:color}));
+        this.underline.pivot.set(this.underline.width / 2, 0);
+        this.underline.position.y = this.labelText.height / 2;
+        this.underline.width = dp.stageRect.width;
+        this.alpha = 0;
     }
 
-    activate(){
+    intro(){
         gsap.timeline()
-        .to(this.background, {alpha:0.8, duration:0.2, ease:'expo.out'}, '<')
-        .to(this.backgroundRim.scale, {x:1.1, y:1.2, duration:0.2, ease:'expo.out'}, '<')
-        .to(this.background.scale, {x:1.1, y:1.2, duration:0.2, ease:'expo.out'}, '<')
-        .to(this.labelText.scale, {x:0.7, y:0.7, duration:0.3, ease:'back.out(2)'}, '<')
-        .to(this, {alpha:0, duration:0.2, ease:'none'}, '<')
+            .set(this.labelText.style, {letterSpacing: 70})
+            .to(this.labelText.style, {letterSpacing: 10, duration:0.6, ease:'elastic.out(0.5)'})
+            .to(this, {alpha:1, duration:0.1, ease:'none'}, '<')
+            .to(this.underline.scale, {x:1, duration:0.3, ease:'expo.out'}, '<')
+            .to(this.underline, {alpha:1, duration:0.1, ease:'none'}, '<')
+            .to(this.labelText, {alpha: 1, duration:0.1, ease:'none'}, '<')
+            .call(()=>{
+                
+                this.cursor    = 'pointer';
+                this.eventMode = 'static';
+            });
+    }
+
+    onTapBehavior(){
+        gsap.timeline()
+            .to(this.labelText.style, {letterSpacing: 80, duration:0.3, ease:'expo.out'})
+            .to(this.underline, {width: dp.stageRect.width, duration:0.3, ease:'expo.out'}, '<')
+            .to(this.underline, {width: 30, duration:0.3, ease:'expo.out'})
+            .to(this.underline, {alpha:0, duration:0.3, ease:'none'}, '<')
+            .to(this.labelText, {alpha: 0, duration:0.3, ease:'none'}, '<')
+    }
+
+    reactivateButton(label){
+        if(label){
+            this.labelText.text = label;
+        }
+        this.intro();
     }
 }
