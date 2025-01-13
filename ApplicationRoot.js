@@ -15,10 +15,10 @@ export class ApplicationRoot extends PIXI.Container {
     
     init(){
         const frame = this.addChild(GraphicsHelper.exDrawRect(0, 0, dp.stageRect.width, dp.stageRect.height, false, false));
-        dp.params.players = 2;
-        dp.params.playerId = 1;
-        this.initViewPlayerRoll();
-        return false;
+        // dp.params.players = 2;
+        // dp.params.playerId = 1;
+        // this.initViewPlayerRoll();
+        // return false;
     
         if(this.checkParam()){
             this.initViewPlayer();
