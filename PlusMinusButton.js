@@ -20,7 +20,7 @@ export class PlusMinusButton extends PIXI.Container {
         this.labelText = this.button.addChild(new PIXI.Text(label, {
             fontFamily        : 'Inter',
             fontWeight        : 100,
-            fontSize          : 150,
+            fontSize          : 250,
             fill              : color,
             
         }));
@@ -28,6 +28,7 @@ export class PlusMinusButton extends PIXI.Container {
     }
 
     onTapBehavior(){
+        PIXI.sound.play('tick1');
         gsap.timeline()
             .set(this.scale, {x:3, y:3})
             .to(this.scale, {x:1, y:1, duration:0.5, ease:'elastic.out(0.5)'});

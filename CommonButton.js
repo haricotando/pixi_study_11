@@ -47,16 +47,19 @@ export class CommonButton extends PIXI.Container {
 
     onTapBehavior(){
         gsap.timeline()
-            .to(this.labelText.style, {letterSpacing: 80, duration:0.3, ease:'expo.out'})
-            .to(this.underline, {width: dp.stageRect.width, duration:0.3, ease:'expo.out'}, '<')
-            .to(this.underline, {width: 30, duration:0.3, ease:'expo.out'})
-            .to(this.underline, {alpha:0, duration:0.3, ease:'none'}, '<')
-            .to(this.labelText, {alpha: 0, duration:0.3, ease:'none'}, '<')
+        .to(this.underline, {width: dp.stageRect.width, duration:0.3, ease:'expo.out'})
+        .to(this.underline, {width: 30, duration:0.3, ease:'expo.out'})
+        .to(this.underline, {alpha:0, duration:0.3, ease:'none'}, '<-0.3')
+        .to(this.labelText, {alpha: 0, duration:0.3, ease:'none'}, '<')
+        .to(this.labelText.style, {letterSpacing: 80, duration:0.3, ease:'expo.out'}, '<')
+        .to(this.labelText.style, {fontSize: 40, duration:0.4, ease:'sine.inOut'}, '<')
     }
 
     reactivateButton(label){
         if(label){
             this.labelText.text = label;
+            gsap.timeline()
+                .set(this.labelText.style, {fontSize: 80});
         }
         this.intro();
     }

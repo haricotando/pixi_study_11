@@ -11,6 +11,7 @@ export class BasicScreen extends PIXI.Container {
         this.title;
         this.subTitle;
         this.submitLabel;
+        this.playSound = true;
         this.color = {};
         this.sortableChildren = true;
     }
@@ -49,7 +50,7 @@ export class BasicScreen extends PIXI.Container {
         this.textTitle = this.addChild(new PIXI.Text(` ${this.title} `, {
             fontFamily   : 'Inter',
             fontWeight   : 500,
-            fontSize     : 65,
+            fontSize     : 100,
             fill         : this.color.emph,
             fontStyle    : 'italic',
             letterSpacing: 70,
@@ -67,14 +68,14 @@ export class BasicScreen extends PIXI.Container {
             this.textSubTitle = this.addChild(new PIXI.Text(` ${this.subTitle} `, {
                 fontFamily   : 'Inter',
                 fontWeight   : 500,
-                fontSize     : 40,
+                fontSize     : 70,
                 fill         : this.color.midB,
                 fontStyle    : 'italic',
                 letterSpacing: 70,
             }));
             this.textSubTitle.anchor.set(0.5, 0.5);
             this.textSubTitle.x = dp.stageRect.halfWidth;
-            this.textSubTitle.y = this.textTitle.y + 70;
+            this.textSubTitle.y = this.textTitle.y + 120;
             
             this.textSubTitle.alpha = 0;
             gsap.timeline()
@@ -89,6 +90,9 @@ export class BasicScreen extends PIXI.Container {
         this.submitBtn = this.addChild(new CommonButton(` ${this.submitLabel} `, this.color.emph));
         this.submitBtn.position.set(dp.stageRect.halfWidth, dp.stageRect.height - 200);
         const onTap = (e) => {
+            if(this.playSound){
+                PIXI.sound.play('taptap1');
+            }
             this.submitBtn.onTapBehavior();
             this.submitBtn.cursor    = 'default';
             this.submitBtn.eventMode = 'none';
