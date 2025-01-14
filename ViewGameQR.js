@@ -10,7 +10,7 @@ export class ViewGameQR extends BasicScreen {
 
         this.title = '招待コード';
         this.subTitle = `招待人数 ${dp.params.players}人`;
-        this.submitLabel = 'プレイに参加';
+        this.submitLabel = 'ゲームを開始';
         this.init();
         this.initContent();
         

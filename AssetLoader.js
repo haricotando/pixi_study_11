@@ -37,11 +37,15 @@ export class AssetLoader extends PIXI.Container {
         PIXI.Assets.add('rollrole1', Utils.addCacheBuster('./assets/rollrole1.mp3'));
         PIXI.Assets.add('taptap1', Utils.addCacheBuster('./assets/taptap1.mp3'));
         PIXI.Assets.add('tick1', Utils.addCacheBuster('./assets/tick1.mp3'));
+        PIXI.Assets.add('displacement_map', Utils.addCacheBuster('./assets/displacement_map.png'));
+        PIXI.Assets.add('star', Utils.addCacheBuster('./assets/star.png'));
         
         this._assetsLoad = [
             'rollrole1',
             'taptap1',
             'tick1',
+            'displacement_map',
+            'star',
         ];
 
         const onProgress = (e) => {

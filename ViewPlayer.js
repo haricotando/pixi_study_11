@@ -10,7 +10,7 @@ export class ViewPlayer extends BasicScreen {
 
         this.title = '順番を入力';
         this.subTitle = `参加人数 ${dp.params.players}人`;
-        this.submitLabel = 'ゲームに参加';
+        this.submitLabel = '参加する';
         this.init();
         this.initNumberContainer('番目', 'playerId', dp.params.players);
         

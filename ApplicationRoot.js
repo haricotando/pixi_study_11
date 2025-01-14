@@ -5,6 +5,7 @@ import { ViewPlayer } from "./ViewPlayer.js";
 import { ViewGameQR } from "./ViewGameQR.js";
 import { ViewPlayerRole } from "./ViewPlayerRole.js";
 import { AssetLoader } from "./AssetLoader.js";
+import { ViewColorPalette } from "./ViewColorPalette.js";
 
 
 export class ApplicationRoot extends PIXI.Container {
@@ -32,6 +33,9 @@ export class ApplicationRoot extends PIXI.Container {
     
     init(){
         const frame = this.addChild(GraphicsHelper.exDrawRect(0, 0, dp.stageRect.width, dp.stageRect.height, false, false));
+
+        // this.addChild(new ViewColorPalette());
+        // return false;
         // dp.params.players = 2;
         // dp.params.playerId = 1;
         // this.initViewPlayerRoll();
@@ -55,6 +59,10 @@ export class ApplicationRoot extends PIXI.Container {
             // dp.params.players = 0;
             return false;
         }
+    }
+
+    initDebugColorView(){
+        this.addChild(new ViewColorPalette());
     }
     
     initViewDealer(){
@@ -86,7 +94,6 @@ export class ApplicationRoot extends PIXI.Container {
             const res = oniIndex === (player);
             buffer['p' + player] = res;
         }
-        console.log(buffer);
         return oniIndex === dp.params.playerId;
     }
 

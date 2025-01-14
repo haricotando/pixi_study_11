@@ -35,7 +35,30 @@ export class BasicScreen extends PIXI.Container {
             midB: `0x${res[2]}`,
             dark: `0x${res[3]}`,
         };
+    }
+
+    checkColorPalette(){
+        const colorPallete =  dp.colorPalette[dp.debug.colorPaletteIndex];
+        console.log(`${dp.debug.colorPaletteIndex} - ${dp.colorPalette[dp.debug.colorPaletteIndex]}`);
         
+
+        const splitStringIntoChunks = (input, chunkSize) => {
+            const result = [];
+            for (let i = 0; i < input.length; i += chunkSize) {
+                result.push(input.slice(i, i + chunkSize));
+            }
+            return result;
+        }
+
+        const res = splitStringIntoChunks(colorPallete, 6)
+        this.color = {
+            emph: `0x${res[0]}`,
+            midA: `0x${res[1]}`,
+            midB: `0x${res[2]}`,
+            dark: `0x${res[3]}`,
+        };
+
+        dp.debug.colorPaletteIndex++;
     }
 
     init(){
@@ -69,7 +92,7 @@ export class BasicScreen extends PIXI.Container {
                 fontFamily   : 'Inter',
                 fontWeight   : 500,
                 fontSize     : 70,
-                fill         : this.color.midB,
+                fill         : this.color.midA,
                 fontStyle    : 'italic',
                 letterSpacing: 70,
             }));
@@ -87,7 +110,7 @@ export class BasicScreen extends PIXI.Container {
         /**
          * submit
          */
-        this.submitBtn = this.addChild(new CommonButton(` ${this.submitLabel} `, this.color.emph));
+        this.submitBtn = this.addChild(new CommonButton(` ${this.submitLabel} `, this.color.midB));
         this.submitBtn.position.set(dp.stageRect.halfWidth, dp.stageRect.height - 200);
         const onTap = (e) => {
             if(this.playSound){
@@ -134,6 +157,17 @@ export class BasicScreen extends PIXI.Container {
 
     }
 
+    changeColor(){
+        gsap.delayedCall(0.3, ()=>{
+            this.textTitle.style.fill = this.color.dark;
+            this.textNumber.style.fill = this.color.dark;
+            const frame2 = this.frame.addChild(GraphicsHelper.exDrawRect(0, 0, dp.stageRect.width, dp.stageRect.height, false, {color:this.color.emph}));
+            frame2.alpha = 0;
+            gsap.to(frame2, {alpha:1, duration:0.1, ease:'none'})
+        });
+
+    }
+
     /** ============================================================
      * NUMBER SELECTOR
      */
@@ -141,7 +175,7 @@ export class BasicScreen extends PIXI.Container {
         const numberContainer = this.content.addChild(new PIXI.Container());
         numberContainer.position.set(dp.stageRect.halfWidth, dp.stageRect.halfHeight);
 
-        const textNumber = numberContainer.addChild(new PIXI.Text('0 ', {
+        this.textNumber = numberContainer.addChild(new PIXI.Text('0 ', {
             fontFamily   : 'Inter',
             fontWeight   : 100,
             fontStyle    : 'italic',
@@ -150,7 +184,7 @@ export class BasicScreen extends PIXI.Container {
             letterSpacing: -50,
         }));
 
-        textNumber.anchor.set(0.5);
+        this.textNumber.anchor.set(0.5);
 
         const textSuffix = numberContainer.addChild(new PIXI.Text(suffix, {
             fontFamily   : 'Inter',
@@ -159,15 +193,15 @@ export class BasicScreen extends PIXI.Container {
             fill         : this.color.midA,
         }));
         textSuffix.anchor.set(0.5, 0.5);
-        textSuffix.position.set(textNumber.width / 3, textNumber.height / 4);
+        textSuffix.position.set(this.textNumber.width / 3, this.textNumber.height / 4);
 
         const updateNumber = (e) => {
-            textNumber.text = `${dp.params[dpStrVal]} `;
-            gsap.to(textSuffix, {x:textNumber.width / 3, y: textNumber.height / 4, duration:0.2, ease:'back.out(3)'})
+            this.textNumber.text = `${dp.params[dpStrVal]} `;
+            gsap.to(textSuffix, {x:this.textNumber.width / 3, y: this.textNumber.height / 4, duration:0.2, ease:'back.out(3)'})
         };
 
         updateNumber();
-        Utils.snapshotPos(textNumber);
+        Utils.snapshotPos(this.textNumber);
 
         /**
         * plus minus
@@ -181,10 +215,10 @@ export class BasicScreen extends PIXI.Container {
             }
             updateNumber();
             gsap.timeline()
-                .set(textNumber.scale, {x:0.1})
-                .set(textNumber, {y:textNumber.snapshot.y - 200})
-                .to(textNumber.scale, {x:1, duration: 0.2, ease:'back.out(3)'})
-                .to(textNumber, {y:textNumber.snapshot.y, duration: 0.2, ease:'back.out(3)'}, '<');
+                .set(this.textNumber.scale, {x:0.1})
+                .set(this.textNumber, {y:this.textNumber.snapshot.y - 200})
+                .to(this.textNumber.scale, {x:1, duration: 0.2, ease:'back.out(3)'})
+                .to(this.textNumber, {y:this.textNumber.snapshot.y, duration: 0.2, ease:'back.out(3)'}, '<');
         };
         const plusButton = this.content.addChild(new PlusMinusButton(' + ', this.color.midB));
         plusButton.x = dp.stageRect.halfWidth + dp.stageRect.halfWidth / 1.5;
@@ -200,10 +234,10 @@ export class BasicScreen extends PIXI.Container {
             }
             updateNumber();
             gsap.timeline()
-                .set(textNumber.scale, {x:2})
-                .set(textNumber, {y:textNumber.snapshot.y + 200})
-                .to(textNumber.scale, {x:1, duration: 0.2, ease:'back.out(3)'})
-                .to(textNumber, {y:textNumber.snapshot.y, duration: 0.2, ease:'back.out(3)'}, '<');
+                .set(this.textNumber.scale, {x:2})
+                .set(this.textNumber, {y:this.textNumber.snapshot.y + 200})
+                .to(this.textNumber.scale, {x:1, duration: 0.2, ease:'back.out(3)'})
+                .to(this.textNumber, {y:this.textNumber.snapshot.y, duration: 0.2, ease:'back.out(3)'}, '<');
         };
         const minusButton = this.content.addChild(new PlusMinusButton(' - ', this.color.midB));
         minusButton.x = dp.stageRect.halfWidth - dp.stageRect.halfWidth / 1.5;

@@ -23,6 +23,7 @@ export class ViewPlayerRole extends BasicScreen {
         this.numberContainer = this.content.addChild(new PIXI.Container());
         this.numberContainer.position.set(dp.stageRect.halfWidth, dp.stageRect.halfHeight);
     
+        // this.textNumber = this.numberContainer.addChild(new PIXI.Text('# ', {
         this.textNumber = this.numberContainer.addChild(new PIXI.Text('? ', {
             fontFamily   : 'Inter',
             fontWeight   : 100,
@@ -33,35 +34,72 @@ export class ViewPlayerRole extends BasicScreen {
         }));
     
         this.textNumber.anchor.set(0.5);
-        Utils.snapshotPos(this.textNumber);    
+        Utils.snapshotPos(this.textNumber);
     }
-
+    
     checkMyRoll(){
-        const drumRollText = '!@#$%^&*?';
+        const drumRollText = '@!@#$%^&*?';
         let drumRollTextIndex = 0;
-
+        
         const _this = this;
-
+        
         gsap.timeline()
-            .to(this.textNumber.scale, {x:0.4, y:0.4, duration:0.7, ease:'expo.In', 
-                onUpdate: function() {
-                    _this.textNumber.text = ` ${drumRollText[drumRollTextIndex]} `;
-                    drumRollTextIndex = ++drumRollTextIndex > drumRollText.length-1 ? 0 : drumRollTextIndex;
-                }
-            })
-            .call(()=>{
-              this.textNumber.text = this.parent.isOni() ? '鬼' : '人';
-            })
-            .to(this.textNumber.scale, {x:1, y:1, duration:0.3, ease:'elastic.out(3)'})
-
+        .to(this.textNumber.scale, {x:0.5, y:0.5, duration:0.7, ease:'expo.In', 
+            onUpdate: function() {
+                _this.textNumber.text = `${drumRollText[drumRollTextIndex]} `;
+                drumRollTextIndex = ++drumRollTextIndex > drumRollText.length-1 ? 0 : drumRollTextIndex;
+            }
+        })
+        .call(()=>{
+            this.textNumber.text = this.parent.isOni() ? '鬼 ' : '人 ';
+        })
+        .to(this.textNumber.scale, {x:1, y:1, duration:0.3, ease:'elastic.out(3)'})
+        
         gsap.delayedCall(1, ()=>{
             this.submitBtn.reactivateButton('次のゲーム');
         });
+        
+    }
+
+
+    fx(){
+
+        const displacementDefaultScale = 100;
+        
+        const displacementSprite = PIXI.Sprite.from(dp.assets.displacement_map);
+        displacementSprite.texture.baseTexture.wrapMode = PIXI.WRAP_MODES.REPEAT;
+
+        const displacementFilter = new PIXI.DisplacementFilter(displacementSprite);
+        displacementFilter.scale.x = displacementDefaultScale;
+        displacementFilter.scale.y = displacementDefaultScale;
+
+        this.content.filters = [displacementFilter];
+
+        const bulgeDefaultRadius = 250;
+        const bulgeDefaultStrength = 0;
+        const bulgePinchFilter = new PIXI.filters.BulgePinchFilter(
+            {
+                center:     [0.5, 0.5],             // 画像の中央に効果を適用
+                radius:     bulgeDefaultRadius,     // 効果の半径
+                strength:   bulgeDefaultStrength,   // 効果の強さ（1で最大膨張、-1で最大縮小）
+            }
+        )
+        
+        this.content.filters.push(bulgePinchFilter);
+
+        gsap.timeline()
+        .to(bulgePinchFilter, {radius: 400, strength:-0.7,  duration:0.4, ease:'circ.out'})
+        .call(()=>{
+            this.changeColor();
+        })
+        .to(bulgePinchFilter, {radius: 0, strength:0,  duration:0.4, ease:'expo.inOut'})
+        .to(displacementFilter.scale, {x:1, y:1, duration:0.3, ease:'expo.out'}, '<')
     }
 
     onSubmit(){
         if(!this.flag){
             this.checkMyRoll();
+            this.fx();
             this.flag = true;
             PIXI.sound.play('rollrole1');
             this.playSound = true;
