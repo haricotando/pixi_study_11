@@ -53,7 +53,8 @@ export class ViewPlayerRole extends BasicScreen {
         .call(()=>{
             this.textNumber.text = this.parent.isOni() ? '鬼 ' : '人 ';
         })
-        .to(this.textNumber.scale, {x:1, y:1, duration:0.3, ease:'elastic.out(3)'})
+        .to(this.textNumber.scale, {x:1, y:1, duration:0.1, ease:'elastic.out(1)'})
+        .to(this.textNumber.scale, {x:1.1, y:1.1, duration:0.7, ease:'expo.out'})
         
         gsap.delayedCall(1, ()=>{
             this.submitBtn.reactivateButton('次のゲーム');
