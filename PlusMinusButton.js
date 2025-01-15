@@ -28,7 +28,7 @@ export class PlusMinusButton extends PIXI.Container {
     }
 
     onTapBehavior(){
-        PIXI.sound.play('tick1');
+        PIXI.sound.play('tick1', { volume: 0.5 });
         gsap.timeline()
             .set(this.scale, {x:3, y:3})
             .to(this.scale, {x:1, y:1, duration:0.5, ease:'elastic.out(0.5)'});
