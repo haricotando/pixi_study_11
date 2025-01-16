@@ -8,6 +8,9 @@ console.log(PIXI.VERSION);
 /* ------------------------------------------------------------
     変数定義
 ------------------------------------------------------------ */
+/**
+ * @
+ */
 // const allowMobileOnly = true;
 const allowMobileOnly = Utils.isOnGithub();
 const backgroundColor = 0xEFEFEF;
@@ -129,3 +132,35 @@ function listenOrientationChange(){
     }
     window.addEventListener('resize', onOrientationChange);
 }
+
+function resumeAudioContext() {
+
+    /**
+     * @todo
+     * 非公式プロパティアクセスになるのでライブラリバージョンを変える際に注意
+     */
+    if (!PIXI.sound._audioContext) {
+        PIXI.sound._audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      const audioCtx = PIXI.sound._audioContext;
+    
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume().then(() => {
+        console.log('AudioContext resumed');
+        }).catch(err => {
+            console.error('Error resuming AudioContext:', err);
+        });
+    }
+}
+
+// 1. ユーザー操作（タッチ終了時）に基づく再開
+document.addEventListener('touchend', () => {
+    resumeAudioContext();
+});
+
+// 2. ページの可視性変更時に基づく再開
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') {
+        resumeAudioContext();
+    }
+});
