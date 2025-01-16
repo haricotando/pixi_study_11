@@ -51,7 +51,16 @@ export class ViewPlayerRole extends BasicScreen {
             }
         })
         .call(()=>{
-            this.textNumber.text = this.parent.isOni() ? '鬼 ' : '人 ';
+            
+            /**
+             * 利用ロジックを選ぶ
+             */
+            // マルチロール
+            this.textNumber.text = this.parent.determineRole_1_Heretic_1_Special();
+            this.textNumber.style.fontSize = 500;
+            
+            // 鬼 / 人
+            // this.textNumber.text = this.parent.determineRole_1_Heretic();
         })
         .to(this.textNumber.scale, {x:1, y:1, duration:0.1, ease:'elastic.out(1)'})
         .to(this.textNumber.scale, {x:1.1, y:1.1, duration:0.7, ease:'expo.out'})

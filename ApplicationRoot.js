@@ -7,9 +7,7 @@ import { ViewPlayerRole } from "./ViewPlayerRole.js";
 import { AssetLoader } from "./AssetLoader.js";
 import { ViewColorPalette } from "./ViewColorPalette.js";
 
-
 export class ApplicationRoot extends PIXI.Container {
-  
     constructor() {
         super();
         this.loadAssets();
@@ -48,19 +46,25 @@ export class ApplicationRoot extends PIXI.Container {
         }
     }
     
+    /* -------------------------------------------------------
+    *    queryから必要なパラメーター取り出し
+    ------------------------------------------------------- */
     checkParam(){
         const urlParams = new URLSearchParams(window.location.search);
         const tableId = urlParams.get('table');
         if(tableId){
             dp.params.tableId = tableId;
-            dp.params.players = urlParams.get('n');
+            dp.params.players = parseInt(urlParams.get('n'), 10);
             return true;
         }else{
-            // dp.params.players = 0;
             return false;
         }
     }
 
+
+    /* =======================================================
+    *    主要View生成
+    ======================================================= */
     initDebugColorView(){
         this.addChild(new ViewColorPalette());
     }
@@ -84,7 +88,35 @@ export class ApplicationRoot extends PIXI.Container {
         this.addChild(new ViewPlayerRole());
     }
 
-    isOni(){
+
+    /* =======================================================
+    *    ロール決定ロジック
+    ======================================================= */
+    determineRole_1_Heretic_1_Special() {
+        const hashValue = this.simpleHash(dp.params.tableId + '_' + dp.params.gameRound);
+        const oniIndex = (hashValue % dp.params.players) + 1;
+
+        // ユーザーが鬼であれば結果を返す
+        if (dp.params.playerId === oniIndex) {
+            return "鬼";
+        }
+
+        // 鬼以外の番号リストを作成
+        const villagerIndices = [];
+        for (let i = 1; i <= dp.params.players; i++) {
+            if (i !== oniIndex) villagerIndices.push(i);
+        }
+
+        // 特別な村人の順番を決定
+        const specialVillagerIndex = villagerIndices[hashValue % villagerIndices.length];
+
+        if (dp.params.playerId === specialVillagerIndex) {
+            return "特人";
+        }
+        return "人";
+    }
+
+    determineRole_1_Heretic(){
         const hashValue = this.simpleHash(dp.params.tableId + '_' + dp.params.gameRound);
         const oniIndex = (hashValue % dp.params.players) + 1;
 
@@ -94,7 +126,8 @@ export class ApplicationRoot extends PIXI.Container {
             const res = oniIndex === (player);
             buffer['p' + player] = res;
         }
-        return oniIndex === dp.params.playerId;
+        const result = oniIndex === dp.params.playerId ? '鬼' : '人';
+        return result;
     }
 
     simpleHash(str) {
@@ -105,13 +138,6 @@ export class ApplicationRoot extends PIXI.Container {
         }
         return sum;
     }
+
     
-    // ユーザが順番 i を入力したら:
-    onInputNumber(oniIndex, i) {
-        if (i === oniIndex) {
-            return true;
-        } else {
-            return false;
-        }
-    }
 }
